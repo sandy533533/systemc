@@ -8,10 +8,10 @@
                 "-g",
                 "${fileDirname}/*.cpp",
                 "-L",
-                "/home/newton/systemc/lib-linux64",
+                "/home/sandy/systemC/systemc/lib-linux64",
                 "-lsystemc",
                 "-I",
-                "/home/newton/systemc/include",
+                "/home/sandy/systemC/systemc/include",
                 "-o",
                 "${fileDirname}/${fileBasenameNoExtension}"
             ],

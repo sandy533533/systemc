@@ -29,6 +29,7 @@ typedef struct trans_type
    int  pri_id;
    bool is_sop;
    bool is_eop;
+   
 
    trans_type()
    {
