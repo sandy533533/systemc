@@ -39,7 +39,7 @@ bool comm_shape_func::shape_status(int packet_len)
 RR_SCH::RR_SCH(int tmp_que_num)
 {
     que_num = tmp_que_num;
-    que_status.resize(que_num,0);
+    que_status.resize(que_num,0);   //que-status is a vector ,size = que_num ,value = 0
     sch_pos = 0;
 }
 

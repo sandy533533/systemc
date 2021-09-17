@@ -21,7 +21,7 @@ class ingress_sch: public sc_module
     void sch_process();
   private:
     vector<deque<TRANS> >   input_que;
-    int m_cycle_cnt;
+    int                     m_cycle_cnt;
     RR_SCH                  *rr_sch; 
 
 };
