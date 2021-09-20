@@ -3,7 +3,8 @@
 #include "stdio.h"
 #include <iostream>
 #include "packet_gen.h"
-#include "ingress_sch.h"
+#include "switch_top.h"
+
 #include "systemc.h"
 #include <memory>
 #include "comm_def.h"
@@ -17,8 +18,7 @@ int sc_main(int argc, char *argv[])
 
 
 {
-   sc_clock clk("clk",100,SC_NS);  //100ns 对应10MHZ 
-
+  
 //systemC中并不允许直接调用通道，不同模块之间进行通信必须通过端口。
 
 //在同一模块里，各个进程之间需要通信，他们可以通过共享变量、握手信号、模块内通道等方式通信。
@@ -30,10 +30,13 @@ int sc_main(int argc, char *argv[])
 //write(&T)代表写FIFO的方法，read()是读FIFO的方法。
 //Num_free()查询FIFO还有多少空单元，num_available()查询FIFO还有多少个数据可以读。对于fifo的size，默认深度为16.
 
-   vector< sc_fifo<TRANS> * >tmp_fifo;  
+   sc_clock    clk                    ("clk",100,SC_NS);  //100ns 对应10MHZ 
+
+   vector      < sc_fifo<TRANS> * >   tmp_fifo;  
 
 // new 分配动态内存
    tmp_fifo.resize(g_m_inter_num);
+
    for(int i=0; i < g_m_inter_num; i++)
    {
       tmp_fifo[i] =new sc_fifo<TRANS>;
@@ -53,22 +56,26 @@ int sc_main(int argc, char *argv[])
 
    pkt_gen_mod.clk(clk);
 
+
+   switch_top switch_top("u_switch_top", glb_cfg);
+   switch_top.clk(clk);
+
+
   //例化一个ingress_sch模块，名字pkt_gen_ing_sch_mod
    //module ingress_sch  u_ing_sch_mod
    // 入参：name ：recu_v_sch
 
-   ingress_sch ing_sch_mod("recu_v_sch", glb_cfg);
-   ing_sch_mod.clk(clk);
+ //  ingress_sch ing_sch_mod("recu_v_sch", glb_cfg);
+ //  ing_sch_mod.clk(clk);
 
-   //blind
+   //bind -- ptr,-->bind
    for(int i =0; i < g_m_inter_num; i++)
    {
       pkt_gen_mod.output[i]->bind(*tmp_fifo[i]);
  //     (*pkt_gen_mod.output[i])(*tmp_fifo[i]);
 
    
-      ing_sch_mod.input_fifo[i]->bind(*tmp_fifo[i]);
-      //(ing_sch_mod.input_fifo[i])(tmp_fifo[i]);
+      switch_top.input_fifo[i]->bind(*tmp_fifo[i]);
    }
    //char
 
