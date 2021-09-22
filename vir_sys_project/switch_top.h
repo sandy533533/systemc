@@ -8,7 +8,9 @@
 class switch_top: public sc_module
 {
   public: 
-    vector<sc_fifo_in<TRANS> *>  input_fifo;
+ //   vector<sc_fifo_in<TRANS * > >  input_fifo;
+    vector<sc_fifo_in<TRANS> *> input_top_fifo;
+
     sc_in_clk                    clk; 
     global_config_c              *m_cfg;
     string                       m_name;

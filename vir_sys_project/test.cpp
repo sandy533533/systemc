@@ -75,7 +75,7 @@ int sc_main(int argc, char *argv[])
  //     (*pkt_gen_mod.output[i])(*tmp_fifo[i]);
 
    
-      switch_top.input_fifo[i]->bind(*tmp_fifo[i]);
+      switch_top.input_top_fifo[i]->bind(*tmp_fifo[i]);
    }
    //char
 

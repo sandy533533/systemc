@@ -3,6 +3,7 @@
 
 #include "ingress_sch.h"
 //激励包长应从顶层获取，先配置固定256B，稍后再改
+
 ingress_sch::ingress_sch(string name, global_config_c *glb_cfg):sc_module(name)
 {
 
@@ -43,7 +44,7 @@ void ingress_sch::recv_packet_process()
         while(input_fifo[i]->num_available() >0)  
         {
             TRANS input_trans;
-            bool flag = input_fifo[i]->nb_readd(input_trans);
+            bool flag = input_fifo[i]->nb_read(input_trans);
 
  //assert --- 断言要少用，一般用于不会出现错的地方，如上面因为input_fifo[i]->num_available() >0 ，所以不会出现flag = 0 的情况           
             assert(flag);
@@ -91,6 +92,8 @@ void ingress_sch::sch_process()
     //调度
     int rst_que =-1;
     bool rst_flag = rr_sch->get_sch_result(rst_que);
+    //找出一个非空的队列，输出
+    //因为是RR调度
     if(rst_flag ==true)
     {
         TRANS front_trans = input_que[rst_que].front();
