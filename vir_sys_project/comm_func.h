@@ -23,6 +23,8 @@ class RR_SCH
         bool  get_sch_result(int &rst_que);
 
 };
+
+
                                                      
 class SP_SCH
 {
@@ -37,6 +39,8 @@ class SP_SCH
         bool  get_sch_result(int &rst_que);
 
 };
+
+
 
 class comm_shape_func
 {

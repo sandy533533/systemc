@@ -117,8 +117,6 @@ bool  SP_SCH::get_sch_result(int &rst_que)
 
 
 
-
-
 template <class T>
 comm_delay_fifo<T>::comm_delay_fifo(string name, sc_time t1):sc_module(name)
 {

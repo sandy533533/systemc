@@ -18,14 +18,20 @@ ingress_sch::ingress_sch(string name, global_config_c *glb_cfg):sc_module(name)
 
  //   glb_cfg = new global_config_c();
     //sch 
-    if (m_cfg->m_sch_sel= 0)
+    
+    if (m_cfg->m_sch_sel== 0)
     {    
         sp_sch = new SP_SCH(g_m_inter_num);
     }
-    else if (m_cfg->m_sch_sel= 1) 
+    else if (m_cfg->m_sch_sel== 1) 
     {
         rr_sch = new RR_SCH(g_m_inter_num);
     }
+
+  
+ //       rr_sch = new RR_SCH(g_m_inter_num);
+
+
 
 //stat
     string debug_file = name + string("_debug.log");
@@ -99,6 +105,7 @@ void ingress_sch::recv_packet_process()
 
 void ingress_sch::sch_process()
 {
+    
     //sch process
     if (m_cfg->m_sch_sel= 0)
     {
@@ -129,21 +136,22 @@ void ingress_sch::sch_process()
             }
         }
     }
+
+ 
     
     //调度
     int rst_que =-1;
- //   bool rst_flag = rr_sch->get_sch_result(rst_que);
+//    bool rst_flag = rr_sch->get_sch_result(rst_que);
 
       bool rst_flag ;
-    if (m_cfg->m_sch_sel= 0)
+    if (m_cfg->m_sch_sel== 0)
     {
         rst_flag = sp_sch->get_sch_result(rst_que);
     }
-    else if (m_cfg->m_sch_sel= 1)
+    else if (m_cfg->m_sch_sel== 1)
     {
         rst_flag = rr_sch->get_sch_result(rst_que);
     }
-
 
     //找出一个非空的队列，输出
     //因为是RR调度

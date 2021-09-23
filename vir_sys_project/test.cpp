@@ -67,7 +67,7 @@ int sc_main(int argc, char *argv[])
    //module ingress_sch  u_ing_sch_mod
    // 入参：name ：recu_v_sch
 
-//   ingress_sch ing_sch_mod("recu_v_sch", glb_cfg);
+ //  ingress_sch ing_sch_mod("recu_v_sch", glb_cfg);
  //  ing_sch_mod.clk(clk);
 
    //bind -- ptr,-->bind
@@ -77,8 +77,8 @@ int sc_main(int argc, char *argv[])
  //     (*pkt_gen_mod.output[i])(*tmp_fifo[i]);
 
    
-      switch_top_mod.input_top_fifo[i]->bind(*tmp_fifo[i]);
-//       ing_sch_mod.input_fifo[i]->bind(*tmp_fifo[i]);
+ //     switch_top_mod.input_top_fifo[i]->bind(*tmp_fifo[i]);
+      switch_top_mod.ingress_sch_mod->input_fifo[i]->bind(*tmp_fifo[i]);
 
    }
    //char
