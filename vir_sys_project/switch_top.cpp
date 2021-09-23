@@ -13,8 +13,9 @@ switch_top::switch_top(string name, global_config_c *glb_cfg):sc_module(name)
     m_cfg = glb_cfg;
     m_name = name ;
 
-//    ingress_sch ingress_sch_mod(string m_name, global_config_c *m_cfg);
-      ingress_sch_mod = new ingress_sch(name, m_cfg);
+// 例化 ingress_sch_mod 模块
+
+      ingress_sch_mod = new ingress_sch(m_name, m_cfg);
 
     SC_METHOD(switch_top_process);
     sensitive << clk.pos();
@@ -25,14 +26,16 @@ switch_top::switch_top(string name, global_config_c *glb_cfg):sc_module(name)
 
 void switch_top::switch_top_process()
 {
-
+//ingress_sch_mod不是指针，所以不是.而是->
  for(int i =0; i < g_m_inter_num; i++)
-   {
+ {
+// 方法一：       
       input_top_fifo[i] = ingress_sch_mod->input_fifo[i];
+// 方法二：
+ //   (*input_top_fifo[i] )(*(ingress_sch_mod->input_fifo[i])) ;
+    
+ }
 
-//      （*input_fifo[i] ）（*（ ingress_sch_mod->inpuf_fifo[i]））
-
-   }
 
 }
     

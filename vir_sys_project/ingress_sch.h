@@ -1,5 +1,3 @@
-
-
 #ifndef __INGRESS_SCH__
 #define __INGRESS_SCH__
 
@@ -10,10 +8,12 @@ class ingress_sch: public sc_module
 {
   public: 
     vector<sc_fifo_in<TRANS> *> input_fifo;
-    sc_in_clk clk; 
+    sc_in_clk                   clk; 
+    global_config_c             *m_cfg;
+    comm_stat_bw                *m_bw_stat;
+
     SC_HAS_PROCESS(ingress_sch);
-    global_config_c *m_cfg;
-    
+
   public:
     ingress_sch(string name, global_config_c *glb_cfg);
     void main_process();
@@ -23,7 +23,8 @@ class ingress_sch: public sc_module
     vector<deque<TRANS> >   input_que;
     int                     m_cycle_cnt;
     RR_SCH                  *rr_sch; 
-
+    SP_SCH                  *sp_sch; 
+   
 };
  
 

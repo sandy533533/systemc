@@ -24,6 +24,7 @@ class packet_gen_module: public sc_module
     //析构函数有助于在跳出程序（比如关闭文件、释放内存等）前释放资源。
 
     global_config_c *m_cfg;
+     comm_stat_bw            *m_bw_stat;
     
   public:
   // 成员函数声明

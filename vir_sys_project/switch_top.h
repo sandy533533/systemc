@@ -10,12 +10,10 @@ class switch_top: public sc_module
   public: 
  //   vector<sc_fifo_in<TRANS * > >  input_fifo;
     vector<sc_fifo_in<TRANS> *> input_top_fifo;
-
+    SC_HAS_PROCESS               (switch_top);
     sc_in_clk                    clk; 
     global_config_c              *m_cfg;
     string                       m_name;
-    SC_HAS_PROCESS               (switch_top);
-
 
   public:
     switch_top(string name, global_config_c *glb_cfg);

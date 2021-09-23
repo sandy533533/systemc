@@ -15,8 +15,23 @@ ingress_sch::ingress_sch(string name, global_config_c *glb_cfg):sc_module(name)
     {
         input_fifo[i] = new sc_fifo_in<TRANS>();
     }
+
+ //   glb_cfg = new global_config_c();
     //sch 
-    rr_sch = new RR_SCH(g_m_inter_num);
+    if (m_cfg->m_sch_sel= 0)
+    {    
+        sp_sch = new SP_SCH(g_m_inter_num);
+    }
+    else if (m_cfg->m_sch_sel= 1) 
+    {
+        rr_sch = new RR_SCH(g_m_inter_num);
+    }
+
+//stat
+    string debug_file = name + string("_debug.log");
+    m_bw_stat =new comm_stat_bw(m_cfg, debug_file,g_m_inter_num);
+
+
 
     SC_METHOD(main_process);
     sensitive << clk.pos();
@@ -27,6 +42,14 @@ void ingress_sch::main_process()
    m_cycle_cnt++;   
    recv_packet_process();
    sch_process();
+
+ //stat
+   if((m_cycle_cnt !=0) && (m_cycle_cnt % (m_cfg->stat_period *100) ==0))
+   {
+       m_bw_stat->print_bw_info(m_cycle_cnt);
+   }
+
+
 }
 
 //read(T &)和read()是阻塞型读方法，如果读的时候FIFO为空，则它们等到FIFO有数据写入时才返回数据，它们的读操作永远是成功的。
@@ -77,27 +100,58 @@ void ingress_sch::recv_packet_process()
 void ingress_sch::sch_process()
 {
     //sch process
-    for(int i =0; i < g_m_inter_num; i++)
+    if (m_cfg->m_sch_sel= 0)
     {
-        if(input_que[i].size() >0)
+        for(int i =0; i < g_m_inter_num; i++)
         {
-            rr_sch->set_que_valid(i ,true);    // que非空的时候才参与sch
+            if(input_que[i].size() >0)
+            {
+                sp_sch->set_que_valid(i ,true);    // que非空的时候才参与sch
+            }
+            else
+            {
+                sp_sch->set_que_valid(i ,false);
+            }
         }
-        else
+
+    }
+    else if (m_cfg->m_sch_sel= 1)
+    {
+        for(int i =0; i < g_m_inter_num; i++)
         {
-            rr_sch->set_que_valid(i ,false);
+            if(input_que[i].size() >0)
+            {
+                rr_sch->set_que_valid(i ,true);    // que非空的时候才参与sch
+            }
+            else
+            {
+                rr_sch->set_que_valid(i ,false);
+            }
         }
     }
     
     //调度
     int rst_que =-1;
-    bool rst_flag = rr_sch->get_sch_result(rst_que);
+ //   bool rst_flag = rr_sch->get_sch_result(rst_que);
+
+      bool rst_flag ;
+    if (m_cfg->m_sch_sel= 0)
+    {
+        rst_flag = sp_sch->get_sch_result(rst_que);
+    }
+    else if (m_cfg->m_sch_sel= 1)
+    {
+        rst_flag = rr_sch->get_sch_result(rst_que);
+    }
+
+
     //找出一个非空的队列，输出
     //因为是RR调度
     if(rst_flag ==true)
     {
         TRANS front_trans = input_que[rst_que].front();
         input_que[rst_que].pop_front();
+        m_bw_stat->record_bw_info(rst_que, front_trans->valid_len, true);
     }
     
 }

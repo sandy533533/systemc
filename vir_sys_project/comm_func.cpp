@@ -47,7 +47,7 @@ void RR_SCH::set_que_valid(int que_id, bool valid_flag)
 {
     if(que_id >= que_num)
     {
-        cout << "error que_id" << que_id <<endl;
+        cout << "error rr que_id" << que_id <<endl;
     }
     else
     {
@@ -61,9 +61,10 @@ bool  RR_SCH::get_sch_result(int &rst_que)
     for (int i=0; i< que_num; i++)
     {
         tmp_pos = (sch_pos +i) % que_num;
+
         if(que_status[tmp_pos] == 1)
         {
-            sch_pos =tmp_pos;
+            sch_pos =(tmp_pos +1) % que_num;
             rst_que = tmp_pos;
             return true;
         }
@@ -71,6 +72,51 @@ bool  RR_SCH::get_sch_result(int &rst_que)
     
     return false;
 }
+
+
+SP_SCH::SP_SCH(int tmp_que_num)
+{
+    que_num = tmp_que_num;
+    que_status.resize(que_num,0);   //que-status is a vector ,size = que_num ,value = 0
+    sch_pos = 0;
+}
+
+void SP_SCH::set_que_valid(int que_id, bool valid_flag)
+{
+    if(que_id >= que_num)
+    {
+        cout << "error sp que_id" << que_id <<endl;
+    }
+    else
+    {
+        que_status[que_id] = valid_flag;
+    }
+}
+
+bool  SP_SCH::get_sch_result(int &rst_que)
+{
+    int tmp_pos = sch_pos;
+
+//        tmp_pos = sch_pos% que_num;
+
+        if(que_status[tmp_pos] == 1)
+        {
+            sch_pos =tmp_pos;
+            rst_que = tmp_pos;
+            return true;
+        }
+        else
+        {
+ //           tmp_pos++ ;
+            sch_pos = (tmp_pos +1) % que_num;
+        }
+
+   
+    return false;
+} 
+
+
+
 
 
 template <class T>
@@ -97,4 +143,72 @@ template <class T>
 void comm_delay_fifo<T>::main_process()
 {
     m_cycle_cnt ++;
+}
+
+
+//统计类相关
+comm_stat_bw::comm_stat_bw(global_config_c *glb_cfg, string file_name, int que_num)
+{
+    m_glb_cfg = glb_cfg;
+    m_file_name =file_name;
+    m_que_num = que_num;
+    m_que_pktlen_stat.resize(m_que_num,0);
+    m_que_pktnum_stat.resize(m_que_num,0);
+    m_total_pktlen_stat =0;
+    m_total_pktnum_stat =0;
+    m_stat_period = glb_cfg->stat_period;
+    m_fp =  fopen (m_file_name.c_str(), "w+");
+    fclose(m_fp);
+}
+
+void comm_stat_bw::record_bw_info(int que_id, int valid_len, int is_eop)
+{
+    if(!is_eop)
+    {
+        m_que_pktlen_stat[que_id] +=valid_len;
+        m_total_pktlen_stat +=valid_len;
+    }
+    else
+    {
+        m_que_pktlen_stat[que_id] += valid_len + g_m_ipg_len;
+        m_que_pktnum_stat[que_id] += 1;
+
+        m_total_pktlen_stat += valid_len + g_m_ipg_len;
+        m_total_pktnum_stat += 1;
+    }
+    
+
+}
+
+void comm_stat_bw::print_bw_info(int m_cycle)
+{
+    m_fp =  fopen (m_file_name.c_str(), "aw+"); 
+    if(m_fp == NULL)
+    {
+        ASSERT(0);
+    }
+    fprintf(m_fp,    "---------------------cur_time:%8d----------------------------------\n", m_cycle);
+    double port_bps;
+    double port_pps; 
+    double total_bps;
+    double total_pps;
+    for(int i =0; i < m_que_num; i++)
+    {      
+        //计算端口级带宽bps和PPS，基于端口计算
+        port_bps =(double)m_que_pktlen_stat[i] *8 / m_stat_period ; // Mbps 
+        port_pps =(double)m_que_pktnum_stat[i]    / m_stat_period ; // MPPS 
+        fprintf(m_fp,"-------cur_portid:%4d    bandwidth:%.2f Mbps(%.2fMPPS)--------\n", i, port_bps, port_pps);
+        //清零
+        m_que_pktlen_stat[i] =0;
+        m_que_pktnum_stat[i] =0;
+    }
+    //计算total级带宽bps和PPS，基于total计算
+    total_bps =(double)m_total_pktlen_stat  *8 / m_stat_period ; // Mbps 
+    total_pps =(double)m_total_pktnum_stat     / m_stat_period ; // MPPS 
+    m_total_pktlen_stat =0;
+    m_total_pktnum_stat =0;
+    fprintf(m_fp,"-------total------------,    bandwidth:%.2f Mbps(%.2fMPPS)--------\n\n\n", total_bps, total_pps);
+
+
+    fclose(m_fp);
 }
