@@ -1,20 +1,28 @@
 
-
-
 #include "ingress_sch.h"
 //激励包长应从顶层获取，先配置固定256B，稍后再改
 
-ingress_sch::ingress_sch(string name, global_config_c *glb_cfg):sc_module(name)
+ingress_sch::ingress_sch(sc_module_name name, global_config_c *glb_cfg):sc_module(name)
 {
 
     m_cycle_cnt =0;
     m_cfg = glb_cfg;
     input_fifo.resize(g_m_inter_num);
     input_que.resize(g_m_inter_num);
+ //   output_sch_que.resize(g_m_inter_num);
+
+
     for(int i=0; i < g_m_inter_num; i++)
     {
         input_fifo[i] = new sc_fifo_in<TRANS>();
     }
+
+//   for(int i=0; i < g_m_inter_num; i++)
+//   {
+//       output_sch_que[i] =new sc_fifo_out<TRANS>;
+//   }
+
+
 
  //   glb_cfg = new global_config_c();
     //sch 
@@ -34,7 +42,8 @@ ingress_sch::ingress_sch(string name, global_config_c *glb_cfg):sc_module(name)
 
 
 //stat
-    string debug_file = name + string("_debug.log");
+    string debug_file = string(name) + string("_ingress_debug.log");
+ //   string debug_file =  string("ingress_debug.log");
     m_bw_stat =new comm_stat_bw(m_cfg, debug_file,g_m_inter_num);
 
 
@@ -159,6 +168,9 @@ void ingress_sch::sch_process()
     {
         TRANS front_trans = input_que[rst_que].front();
         input_que[rst_que].pop_front();
+
+ //       output_sch_que[rst_que]->nb_write(front_trans);
+
         m_bw_stat->record_bw_info(rst_que, front_trans->valid_len, true);
     }
     

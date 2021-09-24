@@ -28,7 +28,7 @@ class packet_gen_module: public sc_module
     
   public:
   // 成员函数声明
-    packet_gen_module(string name, global_config_c *glb_cfg);
+    packet_gen_module(sc_module_name name, global_config_c *glb_cfg);
     void packet_gen_process();
     vector<comm_shape_func *> packet_shape;
     

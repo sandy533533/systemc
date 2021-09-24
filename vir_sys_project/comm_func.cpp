@@ -116,34 +116,6 @@ bool  SP_SCH::get_sch_result(int &rst_que)
 } 
 
 
-
-template <class T>
-comm_delay_fifo<T>::comm_delay_fifo(string name, sc_time t1):sc_module(name)
-{
-    m_cycle_cnt =0;
-    SC_METHOD(main_process);
-    sensitive << clk.pos();
-}
-
-template <class T>
-void comm_delay_fifo<T>::notify(T &)
-{
-    
-}
-
-template <class T>
-bool comm_delay_fifo<T>::get_ready_info(T &)
-{
-    return true;
-}
-
-template <class T>
-void comm_delay_fifo<T>::main_process()
-{
-    m_cycle_cnt ++;
-}
-
-
 //统计类相关
 comm_stat_bw::comm_stat_bw(global_config_c *glb_cfg, string file_name, int que_num)
 {

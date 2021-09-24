@@ -14,9 +14,10 @@ class switch_top: public sc_module
     sc_in_clk                    clk; 
     global_config_c              *m_cfg;
     string                       m_name;
+//    sc_module_name                       m_name;
 
   public:
-    switch_top(string name, global_config_c *glb_cfg);
+    switch_top(sc_module_name name, global_config_c *glb_cfg);
     void switch_top_process();
     ingress_sch         *ingress_sch_mod;
 

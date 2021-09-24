@@ -3,7 +3,7 @@
 
 #include "packet_gen.h"
 //激励包长应从顶层获取，先配置固定256B，稍后再改
-packet_gen_module::packet_gen_module(string name, global_config_c *glb_cfg):sc_module(name)
+packet_gen_module::packet_gen_module(sc_module_name name, global_config_c *glb_cfg):sc_module(name)
 {
 
     m_cycle_cnt =0;
@@ -29,7 +29,7 @@ packet_gen_module::packet_gen_module(string name, global_config_c *glb_cfg):sc_m
     }
     
 //stat
-    string debug_file = name + string("_debug.log");
+    string debug_file = string("packet_gen_debug.log");
     m_bw_stat =new comm_stat_bw(m_cfg, debug_file,g_m_inter_num);
 
 

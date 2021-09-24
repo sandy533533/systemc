@@ -15,11 +15,9 @@ using namespace std;
 int sc_main(int argc, char *argv[])
 
 
-
-
 {
-  
-//systemC中并不允许直接调用通道，不同模块之间进行通信必须通过端口。
+
+//systemC中并不允许直接调用通道channel，不同模块之间进行通信必须通过端口port。
 
 //在同一模块里，各个进程之间需要通信，他们可以通过共享变量、握手信号、模块内通道等方式通信。
 //如果他们之间的通信是通过模块内通道。
@@ -75,10 +73,19 @@ int sc_main(int argc, char *argv[])
    {
       pkt_gen_mod.output[i]->bind(*tmp_fifo[i]);
  //     (*pkt_gen_mod.output[i])(*tmp_fifo[i]);
-
-   
- //     switch_top_mod.input_top_fifo[i]->bind(*tmp_fifo[i]);
       switch_top_mod.ingress_sch_mod->input_fifo[i]->bind(*tmp_fifo[i]);
+
+  // 模块嵌套的时候，是不是只有最底层是指针？嵌套的时候是结构体嵌套？
+
+//符号.和->的作用和区别
+//A.B则A为对象或者结构体；
+//点号（.）：左边必须为实体。
+
+//A->B则A为指针，->是成员提取，A->B是提取A中的成员B，A只能是指向类、结构、联合的指针；
+//箭头（->）：左边必须为指针；
+
+// 定义时有*，说明是指针，用->; 定义时无*，说明是结构体或class，用点号（.）  ？？？
+
 
    }
    //char

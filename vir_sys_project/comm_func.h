@@ -77,6 +77,32 @@ class comm_delay_fifo: public sc_module
 
 };
 
+template <class T>
+comm_delay_fifo<T>::comm_delay_fifo(string name, sc_time t1):sc_module(name)
+{
+    m_cycle_cnt =0;
+    SC_METHOD(main_process);
+    sensitive << clk.pos();
+}
+
+template <class T>
+void comm_delay_fifo<T>::notify(T &)
+{
+    
+}
+
+template <class T>
+bool comm_delay_fifo<T>::get_ready_info(T &)
+{
+    return true;
+}
+
+template <class T>
+void comm_delay_fifo<T>::main_process()
+{
+    m_cycle_cnt ++;
+}
+
 class comm_stat_bw
 {
     public:

@@ -1,6 +1,6 @@
 #include "switch_top.h"
 
-switch_top::switch_top(string name, global_config_c *glb_cfg):sc_module(name)
+switch_top::switch_top(sc_module_name name, global_config_c *glb_cfg):sc_module(name)
 {
  /*   
     input_top_fifo.resize(g_m_inter_num);
@@ -12,12 +12,15 @@ switch_top::switch_top(string name, global_config_c *glb_cfg):sc_module(name)
 
 */
     m_cfg = glb_cfg;
-    m_name = name ;
+    m_name = string(name) ;
 
 // 例化 ingress_sch_mod 模块
 
-      ingress_sch_mod = new ingress_sch(m_name, m_cfg);
+      ingress_sch_mod = new ingress_sch("u_switch_top", m_cfg);
       ingress_sch_mod->clk(clk);
+
+
+      
 
     SC_METHOD(switch_top_process);
     sensitive << clk.pos();
@@ -35,6 +38,8 @@ void switch_top::switch_top_process()
  //     input_top_fifo[i] = ingress_sch_mod->input_fifo[i];
 // 方法二：
  //   (*input_top_fifo[i] )(*(ingress_sch_mod->input_fifo[i])) ;
+  //   (*input_top_fifo[i] )(*(ingress_sch_mod->input_fifo[i])) ;
+
     
  }
 
