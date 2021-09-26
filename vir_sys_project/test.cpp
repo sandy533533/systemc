@@ -3,7 +3,9 @@
 #include "stdio.h"
 #include <iostream>
 #include "packet_gen.h"
-#include "switch_top.h"
+//#include "switch_top.h"
+#include "ingress_sch.h"
+#include "pe_engress.h"
 
 #include "systemc.h"
 #include <memory>
@@ -30,16 +32,18 @@ int sc_main(int argc, char *argv[])
 
    sc_clock    clk                    ("clk",100,SC_NS);  //100ns 对应10MHZ 
 
-   vector      < sc_fifo<TRANS> * >   tmp_fifo;  
+   vector      < sc_fifo<TRANS> * >   tmp_fifo0;  
+   vector      < sc_fifo<TRANS> * >   tmp_fifo1;  
 
 // new 分配动态内存
-   tmp_fifo.resize(g_m_inter_num);
+   tmp_fifo0.resize(g_m_inter_num);
+   tmp_fifo1.resize(g_m_inter_num);
 
    for(int i=0; i < g_m_inter_num; i++)
    {
  //     tmp_fifo[i] =new sc_fifo<TRANS>();
-     tmp_fifo[i] =new sc_fifo<TRANS>;
-
+     tmp_fifo0[i] =new sc_fifo<TRANS>;
+     tmp_fifo1[i] =new sc_fifo<TRANS>;
    }
     
 
@@ -53,28 +57,27 @@ int sc_main(int argc, char *argv[])
    //glb_cfg ：全局参数传入模块，就像module map中的cfg寄存器信号。模块除了自己的输入输出，就是外面的配置寄存器了
 
    packet_gen_module pkt_gen_mod("packet_gen", glb_cfg);
-
    pkt_gen_mod.clk(clk);
 
+   ingress_sch ing_sch_mod("ingress_sch", glb_cfg);
+   ing_sch_mod.clk(clk);
 
-   switch_top switch_top_mod("u_switch_top", glb_cfg);
-   switch_top_mod.clk(clk);
+   pe_engress pe_eng_mod("pe_engress", glb_cfg);
+   pe_eng_mod.clk(clk);
 
-
-  //例化一个ingress_sch模块，名字pkt_gen_ing_sch_mod
-   //module ingress_sch  u_ing_sch_mod
-   // 入参：name ：recu_v_sch
-
- //  ingress_sch ing_sch_mod("recu_v_sch", glb_cfg);
- //  ing_sch_mod.clk(clk);
+ //  switch_top switch_top_mod("u_switch_top", glb_cfg);
+ //  switch_top_mod.clk(clk);
 
    //bind -- ptr,-->bind
    for(int i =0; i < g_m_inter_num; i++)
    {
-      pkt_gen_mod.output[i]->bind(*tmp_fifo[i]);
- //     (*pkt_gen_mod.output[i])(*tmp_fifo[i]);
-      switch_top_mod.ingress_sch_mod->input_fifo[i]->bind(*tmp_fifo[i]);
+      pkt_gen_mod.output[i]->bind(*tmp_fifo0[i]);
+      ing_sch_mod.input_fifo[i]->bind(*tmp_fifo0[i]);
 
+      ing_sch_mod.output_sch_que[i]->bind(*tmp_fifo1[i]);
+      pe_eng_mod.input_sch_que[i]->bind(*tmp_fifo1[i]);
+
+   }
   // 模块嵌套的时候，是不是只有最底层是指针？嵌套的时候是结构体嵌套？
 
 //符号.和->的作用和区别
@@ -87,7 +90,7 @@ int sc_main(int argc, char *argv[])
 // 定义时有*，说明是指针，用->; 定义时无*，说明是结构体或class，用点号（.）  ？？？
 
 
-   }
+ 
    //char
 
    sc_start(100,SC_MS);

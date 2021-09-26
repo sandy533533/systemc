@@ -8,13 +8,12 @@ class pe_engress: public sc_module
 {
   public: 
   // input
-
+  
     vector<sc_fifo_in<TRANS> *>  input_sch_que;
     sc_in_clk                    clk; 
 
   //output
-
-    vector<sc_fifo_out<TRANS> *> output_engress_fifo;
+ //   vector<sc_fifo_out<TRANS> *> output_engress_fifo;
   //cpu
 
     global_config_c              *m_cfg;
@@ -25,7 +24,7 @@ class pe_engress: public sc_module
     SC_HAS_PROCESS(pe_engress);
 
   public:
-    pe_engress(string name, global_config_c *glb_cfg);
+    pe_engress(sc_module_name name, global_config_c *glb_cfg);
     void                        main_process();
 
     void                        recv_inpacket_process();

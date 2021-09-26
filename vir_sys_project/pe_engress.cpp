@@ -1,25 +1,26 @@
 #include "pe_engress.h"
 //激励包长应从顶层获取，先配置固定256B，稍后再改
 
-pe_engress::pe_engress(string name, global_config_c *glb_cfg):sc_module(name)
+pe_engress::pe_engress(sc_module_name name, global_config_c *glb_cfg):sc_module(name)
 {
 
     m_cycle_cnt =0;
     m_cfg = glb_cfg;
     input_sch_que.resize(g_m_inter_num);
     output_que.resize(g_m_inter_num);
-    output_engress_fifo.resize(g_m_inter_num);
+ //   output_engress_fifo.resize(g_m_inter_num);
 
 
     for(int i=0; i < g_m_inter_num; i++)
     {
         input_sch_que[i] = new sc_fifo_in<TRANS>();
+
     }
 
-    for(int i=0; i < g_m_inter_num; i++)
-    {
-        output_engress_fifo[i] =new sc_fifo_out<TRANS>;
-    }
+ //   for(int i=0; i < g_m_inter_num; i++)
+ //   {
+ //       output_engress_fifo[i] =new sc_fifo_out<TRANS>;
+//    }
  
 
     if (m_cfg->m_sch_sel== 0)
@@ -36,7 +37,7 @@ pe_engress::pe_engress(string name, global_config_c *glb_cfg):sc_module(name)
     }
 
 //stat
-    string debug_file = name + string("engress_debug.log");
+    string debug_file = string(name) + string("_debug.log");
     m_bw_stat =new comm_stat_bw(m_cfg, debug_file,g_m_inter_num);
 
 
@@ -147,7 +148,7 @@ void pe_engress::send_outpacket_process()
         TRANS front_trans = output_que[rst_que].front();
         output_que[rst_que].pop_front();
 
-        output_engress_fifo[rst_que]->nb_write(front_trans);
+//        output_engress_fifo[rst_que]->nb_write(front_trans);
 
         m_bw_stat->record_bw_info(rst_que, front_trans->valid_len, true);
     }

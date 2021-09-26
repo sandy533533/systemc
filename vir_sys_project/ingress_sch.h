@@ -8,18 +8,16 @@ class ingress_sch: public sc_module
 {
   public: 
   // input
-
-    vector<sc_fifo_in<TRANS> *> input_fifo;
+     vector<sc_fifo_in<TRANS> *> input_fifo;
     sc_in_clk                   clk; 
 
   //output
+    vector<sc_fifo_out<TRANS> *> output_sch_que;
 
-//    vector<sc_fifo_out<TRANS> *> output_sch_que;
   //cpu
-
     global_config_c             *m_cfg;
-  // stat  
 
+  // stat  
     comm_stat_bw                *m_bw_stat;
   
     SC_HAS_PROCESS(ingress_sch);
