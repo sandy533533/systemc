@@ -22,7 +22,9 @@ const int g_m_ipg_len =20;
 
 typedef struct trans_type
 {
-   int  port_id;
+   int  sport_id;
+   int  dport_id;
+  
    int  que_id;
    int  packet_id;
    int  packet_len;
@@ -34,7 +36,8 @@ typedef struct trans_type
 
    trans_type()
    {
-      port_id =0;
+      sport_id =0;
+      dport_id =0;     
       que_id  =0;
       packet_id =0;
       packet_len =0;
@@ -56,17 +59,34 @@ class global_config_c
       int  m_inter_num;      //接口数
       int  m_sch_sel;        //调度器选择 0:SP 1:RR  2:WRR
       int  shape_value;      //限速值 单位Mbps
-       int  stat_period;       //统计间隔，以us为单位
-   public:
+      int  stat_period;      //统计间隔，以us为单位
+
+
    global_config_c()
    {
       m_freq = g_m_freq;
       m_inter_num =g_m_inter_num; 
       m_sch_sel = 1;
       shape_value = 1000;
-      stat_period = 10;
+      stat_period = 10;        
+//      sport_id_que[0][0] = 1;  
    }
 }; 
+
+class table_xid_to_qid
+{
+      public:
+      map  <int, int>    Map_xid2qid;
+
+      table_xid_to_qid()
+      {
+      }
+
+
+}
+
+
+
 
 #define  ASSERT(A)  (assert(A))
 
