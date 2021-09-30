@@ -118,7 +118,7 @@ void ingress_sch::sch_process()
 {
     
     //sch process
-    if (m_cfg->m_sch_sel= 0)
+    if (m_cfg->m_sch_sel== 0)
     {
         for(int i =0; i < g_m_inter_num; i++)
         {
@@ -133,7 +133,7 @@ void ingress_sch::sch_process()
         }
 
     }
-    else if (m_cfg->m_sch_sel= 1)
+    else if (m_cfg->m_sch_sel== 1)
     {
         for(int i =0; i < g_m_inter_num; i++)
         {

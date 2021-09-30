@@ -4,7 +4,7 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/**",
-                "/home/sandy/systemC/systemc/include"
+                "/home/sandy/systemc/include"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",

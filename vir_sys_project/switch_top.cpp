@@ -11,14 +11,14 @@ switch_top::switch_top(sc_module_name name, global_config_c *glb_cfg):sc_module(
 //    ingress_sch ingress_sch_mod("u_switch_top", glb_cfg);
 //    ingress_sch_mod.clk(clk);
 
-    ingress_sch_mod = new ingress_sch("u_switch_top", m_cfg);
+    ingress_sch_mod = new ingress_sch("u_recv_", m_cfg);
     ingress_sch_mod->clk(clk);
 
 //    pe_engress pe_engress_mod("u_switch_top", glb_cfg);
 //    pe_engress_mod.clk(clk);
 
-    pe_engress_mod  = new pe_engress("u_switch_top", m_cfg);
-    pe_engress_mod->clk(clk);
+ //   pe_engress_mod  = new pe_engress("u_switch_top", m_cfg);
+ //   pe_engress_mod->clk(clk);
 
    
 
@@ -51,6 +51,6 @@ void switch_top::switch_top_process()
  }
 
 }
-    
+   
 
     

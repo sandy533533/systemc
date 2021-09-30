@@ -3,10 +3,9 @@
 #include "stdio.h"
 #include <iostream>
 #include "packet_gen.h"
-//#include "switch_top.h"
-#include "ingress_sch.h"
-#include "pe_engress.h"
-
+#include "switch_top.h"
+//#include "ingress_sch.h"
+//#include "pe_engress.h"
 #include "systemc.h"
 #include <memory>
 #include "comm_def.h"
@@ -63,7 +62,7 @@ int sc_main(int argc, char *argv[])
    ing_sch_mod.clk(clk);
 
    pe_engress pe_eng_mod("pe_engress", glb_cfg);
-   pe_eng_mod.clk(clk);
+  pe_eng_mod.clk(clk);
 
  //  switch_top switch_top_mod("u_switch_top", glb_cfg);
  //  switch_top_mod.clk(clk);
@@ -72,6 +71,10 @@ int sc_main(int argc, char *argv[])
    for(int i =0; i < g_m_inter_num; i++)
    {
       pkt_gen_mod.output[i]->bind(*tmp_fifo0[i]);
+
+//      switch_top_mod.ingress_sch_mod->input_fifo[i]->bind(*tmp_fifo0[i]);
+
+
       ing_sch_mod.input_fifo[i]->bind(*tmp_fifo0[i]);
 
       ing_sch_mod.output_sch_que[i]->bind(*tmp_fifo1[i]);

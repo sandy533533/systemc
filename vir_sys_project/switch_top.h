@@ -25,7 +25,7 @@ class switch_top: public sc_module
 
   private:
     vector   < sc_fifo<TRANS> * >  tmp_fifo; 
-//    vector   < sc_fifo<TRANS> * >  tmp_fifo1; 
+    vector   < sc_fifo<TRANS> * >  tmp_fifo1; 
 
 
 
