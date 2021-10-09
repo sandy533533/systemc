@@ -33,7 +33,7 @@ int sc_main(int argc, char *argv[])
 
   
   
-   sc_start(10,SC_MS);
+   sc_start(100,SC_MS);
 
    return 0;
 }

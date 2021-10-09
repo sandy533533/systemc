@@ -57,7 +57,9 @@ void packet_gen_module::packet_gen_process()
             new_trans.valid_len =  256;
             new_trans.is_sop = true;
             new_trans.is_eop = true;
-            output->write(new_trans);
+    //        output->write(new_trans);
+                output.write(new_trans);
+
             //stat
             m_bw_stat->record_bw_info(0, new_trans.valid_len, true);
         }
