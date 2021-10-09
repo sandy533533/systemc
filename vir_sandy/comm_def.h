@@ -17,7 +17,7 @@ using namespace tlm;
 
 
 const int g_m_freq  = 100; //100M HZ
-const int g_m_inter_num =4;
+const int g_m_inter_num =1;
 const int g_m_ipg_len =20;
 
 typedef struct trans_type
@@ -33,6 +33,11 @@ typedef struct trans_type
    bool is_sop;
    bool is_eop;
    
+   inline bool operator == (const trans_type& rhs) const
+   {
+     return (rhs.sport_id == sport_id && rhs.dport_id == dport_id && rhs.que_id == que_id && rhs.packet_id == packet_id && rhs.packet_len == packet_len && rhs.valid_len == valid_len
+             && rhs.pri_id == pri_id && rhs.is_sop == is_sop && rhs.is_eop == is_eop);
+   }
 
    trans_type()
    {
@@ -49,6 +54,35 @@ typedef struct trans_type
 } TRANS_STR; 
 
 typedef  std::shared_ptr<TRANS_STR>  TRANS;
+
+inline
+ostream&
+operator << ( ostream& os, const shared_ptr<TRANS_STR> & /* a */ )
+{
+    os << "streaming of struct trans_type not implemented";
+    return os;
+}
+
+inline
+void
+#if defined(SC_API_VERSION_STRING)
+    sc_trace( sc_trace_file* tf, const shared_ptr<TRANS_STR> & a, const std::string& name )
+#else
+    sc_trace( sc_trace_file* tf, const shared_ptr<TRANS_STR> & a, const sc_string& name )
+#endif
+{
+//  sc_trace( tf, a.sport_id, name + ".sport_id" );
+//  sc_trace( tf, a.dport_id, name + ".dport_id" );
+//  sc_trace( tf, a.que_id, name + ".que_id" );
+//  sc_trace( tf, a.packet_id, name + ".packet_id" );
+//  sc_trace( tf, a.packet_len, name + ".packet_len" );
+//  sc_trace( tf, a.valid_len, name + ".valid_len" );
+//  sc_trace( tf, a.pri_id, name + ".pri_id" );
+//  sc_trace( tf, a.is_sop, name + ".is_sop" );
+//  sc_trace( tf, a.is_eop, name + ".is_eop" );
+
+
+}
 
 
 // 全局配置
@@ -84,7 +118,6 @@ class table_xid_to_qid
 
 
 };
-
 
 
 

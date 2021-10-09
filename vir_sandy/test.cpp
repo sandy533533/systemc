@@ -3,8 +3,8 @@
 #include "stdio.h"
 #include <iostream>
 #include "packet_gen.h"
-//#include "switch_top.h"
-#include "ingress_sch.h"
+#include "switch_top.h"
+//#include "ingress_sch.h"
 
 #include "systemc.h"
 #include <memory>
@@ -38,21 +38,21 @@ int sc_main(int argc, char *argv[])
    pkt_gen_mod.clk(clk);
    pkt_gen_mod.output->bind(*tmp_signal);
 
-/*
+
    switch_top switch_top_mod("u_switch_top");
    switch_top_mod.clk(clk);
- //  switch_top_mod.input_top_fifo->bind(*tmp_signal);
-*/
+   switch_top_mod.input_top_fifo->bind(*tmp_signal);
 
+/*
      ingress_sch  ingress_sch_mod ("ingress_sch");
      ingress_sch_mod.clk(clk);
      ingress_sch_mod.input_fifo->bind(*tmp_signal);
-
+*/
      
   
    //char
 
-   sc_start(10,SC_MS);
+   sc_start(100,SC_MS);
 
    return 0;
 }

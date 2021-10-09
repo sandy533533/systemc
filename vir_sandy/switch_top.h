@@ -18,7 +18,8 @@ struct switch_top : sc_module {
 
     SC_CTOR(switch_top) 
      {
-         
+     input_top_fifo = new  sc_in<TRANS>() ;
+
      ingress_sch_mod = new ingress_sch("ingress_sch");
      ingress_sch_mod->clk(clk);
      ingress_sch_mod->input_fifo->bind(*input_top_fifo);
